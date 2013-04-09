@@ -1,0 +1,59 @@
+*templateX.txt*   An advanced templating system
+*templateX*
+
+                __                       __      __      _  __ ~
+               / /____  ____ ___  ____  / /___ _/ /____ | |/ / ~
+              / __/ _ \/ __ `__ \/ __ \/ / __ `/ __/ _ \|   /  ~
+             / /_/  __/ / / / / / /_/ / / /_/ / /_/  __/   |   ~
+             \__/\___/_/ /_/ /_/ .___/_/\__,_/\__/\___/_/|_|   ~
+                              /_/                              ~
+
+
+==============================================================================
+1. Reference                                             *templateX-reference*
+
+All is explained in README.rst. This is only a summary/reference.
+
+Operation:
+
+    * Traverses templates folder during search for a template
+    * Uses templates with exact filename, *.extension or *
+    * Standard variables from the plugin are available
+    * Extensibe with custom include files (.vim) and templates
+    * facts from facter (live or from file) can be available as variables
+    * Functions as interface to logging and template variables
+    * Templates and includes are maintainable outside of plugin directory
+
+Functions:
+
+    * :TemplateXlog
+    * :TemplateXvars
+
+Variables:
+
+    * g:templateX_plugin_loaded
+    * g:templateX_no_autocmd
+    * g:templateX_templates
+    * g:templateX_facts
+    * g:templateX_pre
+    * g:templateX_post
+
+
+==============================================================================
+2. About                                                     *templateX-about*
+
+Core maintainer of templateX: Michael Arlt
+Slightly based on work from: Adrian Perez de Castro
+
+
+==============================================================================
+3. License                                                 *templateX-license*
+
+templateX is released under the GNU General Public License (GPL) 3.0 or higher
+- see file COPYING and http://www.gnu.org/licenses/gpl.html
+
+Some original code was released under the MIT license
+- see http://opensource.org/licenses/MIT
+
+ vim:tw=78:sw=4:ft=help:norl:
+

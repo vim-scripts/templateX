@@ -1,0 +1,7 @@
+# Default variables from templateX plugin:
+# basename path file_without_extension extension dirname
+# Additional variables with default template 'template/*.templateX.vim':
+# day year month time hostname user
+# For other variables: see include files (*.vim) and README.rst
+
+__goto__

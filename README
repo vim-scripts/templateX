@@ -1,0 +1,18 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=4517
+
+This is a plugin for Vim that will allow you to have a set of                                                                                                     
+templates for certain file types. It is useful for automating
+some daily tasks with custom includes which enable you to
+extend the functionality of templateX.
+
+Its features makes it worth having more than only one look:
+
+  + Traverses templates folder during search for a template
+  + Uses templates with exact filename, *.extension or *
+  + Standard variables from the plugin are available
+  + Extensibe with custom include files (.vim) and templates
+  + Facts from facter (live or from file) can be available as template variables
+  + Functions as interface to logging and template variables
+  + Templates and includes are maintainable outside of plugin directory (central)
+
+Please provide feedback (Wiki/Mail) - especially if you vote "Unfulfilling".
