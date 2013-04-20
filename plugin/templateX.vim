@@ -56,7 +56,7 @@ endfunction
 function <SID>TLoadFacts()
 	if exists("g:templateX_facts")
 		if g:templateX_facts == 'live'
-		  call <SID>TNotice('templateX including live facts')
+			call <SID>TNotice('templateX including live facts')
 			for line in split(system('facter'), "\x0a")
 				call <SID>TFact2templateXvar(line)
 			endfor
@@ -65,6 +65,8 @@ function <SID>TLoadFacts()
 			for line in readfile(g:templateX_facts)
 				call <SID>TFact2templateXvar(line)
 			endfor
+		else
+		  call <SID>TError('templateX missing/access: ' . g:templateX_facts)
 		endif
 	endif
 endfunction
@@ -148,10 +150,10 @@ function <SID>TExpandVars()
 		"call <SID>TDebug('templateX b:templateX.' . key . '=' . b:templateX[key])
 		let pre  = exists("g:templateX_pre")  ? g:templateX_pre  : '__'
 		let post = exists("g:templateX_post") ? g:templateX_post : '__'
-		silent! execute '%s/' . pre . key . post . '/' . b:templateX[key] . '/g'
+		silent! execute '%s/' . pre . key . post . '/' . b:templateX[key] . '/gI'
 	endfor
- 	" goto mark
-	silent! execute '%s/' . pre . 'goto' . post . '//g'
+	" goto mark
+	silent! execute '%s/' . pre . 'goto' . post . '//gI'
 endfunction
 
 " all message functions
@@ -174,14 +176,14 @@ endfunction
 
 function <SID>TError(message)
 	call <SID>TMessage('error',a:message)
-	echom a:message
+	echoe a:message
 endfunction
 
 " Show collected log messages
 function <SID>TShowLog()
 	if exists("b:templateX")
 		for logLine in reverse(b:templateXlog)
-		  echo logLine
+			echo logLine
 		endfor
 	else
 		echo 'templateX was not used in this buffer'

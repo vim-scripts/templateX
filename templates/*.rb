@@ -3,10 +3,10 @@
 opts = Struct.new( :name, :age, :switch, :option, :files ).new__goto__
 
 ### start-configuration-part ###
-opts.name = "unknown"
+opts.name = 'unknown'
 opts.age = 10
 opts.switch = false
-opts.option = "opt0"
+opts.option = 'opt0'
 ### end-configuration-part ###
 
 require 'optparse' # http://ruby-doc.org/stdlib-1.8.7/libdoc/optparse/rdoc/OptionParser.html

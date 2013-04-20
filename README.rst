@@ -2,7 +2,7 @@
  A Vim template plugin: templateX
 =================================
 :Author: Michael Arlt
-:Version: 1.0
+:Version: 1.01
 
 Distributed under the ``GNU General Public License (GPL) 3.0`` or higher
 - see file ``COPYING`` and http://www.gnu.org/licenses/gpl.html
@@ -13,6 +13,15 @@ This is a plugin for Vim that will allow you to have a set of
 templates for certain file types. It is useful for automating
 some daily tasks with custom includes which enable you to
 extend the functionality of templateX.
+
+
+Changelog
+=========
+
+1.01: - Fixed case sensitivity (s/.../.../gI) for tag replacement
+      - Added message if factsfile missing/access
+      - Use echoe for error messages
+      - Small changes in templates
 
 
 Installation

@@ -1,7 +1,7 @@
 #!/bin/bash -eu
 
 ### start-configuration-part ###
-name="unknown"__goto__
+name='unknown'__goto__
 declare -i age=10
 switch=false
 ### end-configuration-part ###
@@ -9,9 +9,8 @@ switch=false
 author='__user__'
 version='0.01'
 
-help()
-{
-  echo "Usage: __basename__ [-h|v] [-d] [-n name] [-a age] [-s] [file ...]
+help() {
+  echo "Usage: ${0##*/} [-h|v] [-d] [-n name] [-a age] [-s] [file ...]
 
     Description ...
 
@@ -22,7 +21,6 @@ help()
     -s              Parameter description
     -h              Help
     -v              Show program version"
-
   test $# -gt 0 && echo "$*" >&2
   exit $#
 }
@@ -34,7 +32,7 @@ do
     a) age=$OPTARG;;
     s) switch=true;;
     h) help;;
-    v) echo -e "__basename__ $version\nAuthor $author"; exit;;
+    v) echo -e "${0##*/} $version\nAuthor $author"; exit;;
    \?) help "Unknown option '-$OPTARG'.";;
     :) help "Option -$OPTARG needs an argument.";;
   esac
