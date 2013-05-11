@@ -1,0 +1,71 @@
+#!/bin/bash -eu
+
+### start-configuration-part ###__goto__
+boolean=false
+declare -i integer=0
+user=
+group=
+package=
+file=
+directory=
+server=
+locale=
+### end-configuration-part ###
+
+author='__user__'
+version='0.01'
+
+help() {
+  echo "Usage: ${0##*/} [-h|v] [-b] [-i val] [-u user] [-g group] [-p package] [-f file] [-d dir] [-s server] [-l locale] [other ...]
+
+    Description ...
+
+    Options:
+
+    -b|--boolean         Parameter description
+    -i|--integer val     Parameter description
+    -u|--user user       Parameter description
+    -g|--group group     Parameter description
+    -p|--package pkg     Parameter description
+    -f|--file file       Parameter description
+    -d|--directory dir   Parameter description
+    -s|--server server   Parameter description
+    -l|--locale locale   Parameter description
+    -h                   Help
+    -v                   Show program version"
+  test $# -gt 0 && echo "$*" >&2
+  exit $#
+}
+
+while getopts ':bi:u:g:p:f:d:s:l:hv' option
+do
+  case $option in
+    b) boolean=true;;
+    i) integer=$OPTARG;;
+    u) user="$OPTARG";;
+    g) group="$OPTARG";;
+    f) file="$OPTARG";;
+    d) directory="$OPTARG";;
+    s) server="$OPTARG";;
+    l) locale="$OPTARG";;
+    h) help;;
+    v) echo -e "${0##*/} $version\nAuthor $author"; exit;;
+   \?) help "Unknown option '-$OPTARG'.";;
+    :) help "Option -$OPTARG needs an argument.";;
+  esac
+done
+
+shift $((OPTIND-1))
+declare -a other=("$@")
+
+echo boolean:$boolean
+echo integer:$integer
+echo user:$user
+echo group:$group
+echo package:$package
+echo file:$file
+echo directory:$directory
+echo server:$server
+echo locale:$locale
+echo other parameters: "${other[@]:-}"
+

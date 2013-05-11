@@ -1,0 +1,34 @@
+# Class: __puppet_fqcn__
+#   Description__goto__
+#
+# == Parameters
+#
+#   $par1 = ''
+#     Description
+#
+#   $par2
+#     val1|val2|val3
+#     Description
+#
+# == Examples
+#
+#   Description
+#
+#   include '__puppet_fqcn__'
+#   __puppet_fqcn__::add {$::fqdn: }
+#   class { '__puppet_fqcn__':
+#       par1 => '256MB',
+#   }
+#
+#
+class __puppet_fqcn__ (
+  	$par1 = 'default',
+  ) {
+
+  File {
+    ensure => file,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0640',
+  }
+}

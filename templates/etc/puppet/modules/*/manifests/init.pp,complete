@@ -1,5 +1,5 @@
-# Class: __puppet_class__
-#   Description
+# Class: __puppet_fqcn__
+#   Description__goto__
 #
 # == Parameters
 #
@@ -14,29 +14,29 @@
 #
 #   Description
 #
-#   include '__puppet_class__'
-#   __puppet_class__::add {$::fqdn: }
-#   class { '__puppet_class__':
+#   include '__puppet_fqcn__'
+#   __puppet_fqcn__::add {$::fqdn: }
+#   class { '__puppet_fqcn__':
 #       par1 => '256MB',
 #   }
 #
 #
-class __puppet_class__ (
-  $par1 = 'default',__goto__
+class __puppet_fqcn__ (
+	  $par1 = 'default',
   ) {
 
   File {
-    ensure  => file,
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0640',
+    ensure => file,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0640',
   }
 
-  anchor { '__puppet_class__::start': }
-    -> class { '__puppet_class__::install': }
-    -> class { '__puppet_class__::config': }
-    -> class { '__puppet_class__::service': }
-    -> anchor { '__puppet_class__::end': }
+  anchor { '__puppet_fqcn__::start': } ->
+  class { '__puppet_fqcn__::install': } ~>
+  class { '__puppet_fqcn__::config': } ~>
+  class { '__puppet_fqcn__::service': } ->
+  anchor { '__puppet_fqcn__::end': }
 
   # Define: add
   #   Example for define
@@ -49,7 +49,7 @@ class __puppet_class__ (
   #
   # == Examples
   #
-  #   __puppet_class__::add{'name':
+  #   __puppet_fqcn__::add{'name':
   #     par1 => 'val',
   #   }
   #
@@ -69,19 +69,20 @@ class __puppet_class__ (
   }
 }
 
-class __puppet_class__::install {
+class __puppet_fqcn__::install {
   package {
-    '__puppet_class__':
-      ensure => installed;
+  	[
+      '__puppet_class__',
+    ]: ensure => installed,
   }
 }
 
 # configure tasks
-class __puppet_class__::config {
+class __puppet_fqcn__::config {
 }
 
 # services tasks
-class __puppet_class__::service {
+class __puppet_fqcn__::service {
   service { '__puppet_class__':
     ensure     => running,
     enable     => true,
@@ -89,4 +90,3 @@ class __puppet_class__::service {
     hasrestart => true,
   }
 }
-

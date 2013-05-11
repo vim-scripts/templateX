@@ -9,10 +9,86 @@ Its features makes it worth having more than only one look:
 
   + Traverses templates folder during search for a template
   + Uses templates with exact filename, *.extension or *
+  + Files with '%' are treated in a special way: etc%test as /etc/test
+  + User can select template variants - e.g. *.sh,shebang *.sh,shortopts
   + Standard variables from the plugin are available
   + Extensibe with custom include files (.vim) and templates
   + Facts from facter (live or from file) can be available as template variables
   + Functions as interface to logging and template variables
   + Templates and includes are maintainable outside of plugin directory (central)
+  + Large set of example templates (bash, completion, ruby, perl, icinga, puppet)
 
 Please provide feedback (Wiki/Mail) - especially if you vote "Unfulfilling".
+
+Here is a list of all files ("templateX/" at the beginning is removed) to get a better impression:
+
+# type filename 
+d plugin/
+- plugin/templateX.vim
+d templates/
+- templates/*.sh,shebang
+- templates/*.sh,yad-monitor_foreground_process
+- templates/*.sh,shortopts
+d templates/etc/
+d templates/etc/icinga/
+d templates/etc/icinga/objects/
+- templates/etc/icinga/objects/*.cfg.templateX.vim
+d templates/etc/icinga/objects/windows/
+- templates/etc/icinga/objects/windows/*.cfg
+d templates/etc/icinga/objects/linux/
+- templates/etc/icinga/objects/linux/*.cfg
+d templates/etc/bash_completion.d/
+- templates/etc/bash_completion.d/*
+d templates/etc/puppet/
+d templates/etc/puppet/modules/
+d templates/etc/puppet/modules/*/
+d templates/etc/puppet/modules/*/manifests/
+l templates/etc/puppet/modules/*/manifests/*.pp,complete -> init.pp,complete
+- templates/etc/puppet/modules/*/manifests/init.pp,complete
+- templates/etc/puppet/modules/*/manifests/params.pp
+- templates/etc/puppet/modules/*/manifests/init.pp,simple
+- templates/etc/puppet/modules/*/manifests/*.pp.templateX.vim
+- templates/etc/puppet/modules/*/manifests/install.pp
+l templates/etc/puppet/modules/*/manifests/* -> .
+- templates/etc/puppet/modules/*/manifests/service.pp
+l templates/etc/puppet/modules/*/manifests/*.pp,simple -> init.pp,simple
+- templates/etc/puppet/modules/*/manifests/config.pp
+- templates/etc/puppet/modules/*/manifests/init.pp,separate
+d templates/etc/puppet/modules/*/files/
+d templates/etc/puppet/modules/*/files/etc/
+l templates/etc/puppet/modules/*/files/etc/bash_completion.d -> ../../../../../bash_completion.d
+d templates/etc/puppet/modules/*/tests/
+- templates/etc/puppet/modules/*/tests/init.pp
+l templates/etc/puppet/modules/*/tests/*.pp.templateX.vim -> ../manifests/*.pp.templateX.vim
+- templates/etc/puppet/modules/*/tests/*.pp
+d templates/etc/puppet/modules/*/lib/
+d templates/etc/puppet/modules/*/lib/facter/
+- templates/etc/puppet/modules/*/lib/facter/*.rb
+- templates/etc/puppet/modules/*/lib/facter/*.templateX.vim
+d templates/etc/puppet/modules/*/lib/puppet/
+d templates/etc/puppet/modules/*/lib/puppet/parser/
+d templates/etc/puppet/modules/*/lib/puppet/parser/functions/
+- templates/etc/puppet/modules/*/lib/puppet/parser/functions/*.rb
+- templates/etc/puppet/modules/*/lib/puppet/parser/functions/*.templateX.vim
+- templates/*.sh,yad-simple
+- templates/*.sh,longopts
+- templates/*.sh,yad-status_from_called
+- templates/*.sh,yad-monitor_background_process
+d templates/home/
+d templates/home/*/
+d templates/home/*/.vim/
+d templates/home/*/.vim/bundle/
+d templates/home/*/.vim/bundle/templateX/
+d templates/home/*/.vim/bundle/templateX/templates/
+- templates/home/*/.vim/bundle/templateX/templates/*
+- templates/home/*/.vim/bundle/templateX/templates/*.vim
+l templates/home/*/.bash_completion.d -> ../../etc/bash_completion.d
+- templates/*.rb
+- templates/*.pl
+- templates/*.templateX.vim
+- COPYING
+d doc/
+- doc/templateX.txt
+- doc/tags
+- README.rst
+

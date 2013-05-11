@@ -38,6 +38,7 @@ function <SID>TMain()
 	elseif filereadable(template)
 		execute "0r " . substitute(template,'*','\\*','g')
 		call <SID>TExpandVars()
+		redraw
 		call <SID>TNotice('templateX used: ' . template)
 		setlocal nomodified
 	else
@@ -56,12 +57,12 @@ endfunction
 function <SID>TLoadFacts()
 	if exists("g:templateX_facts")
 		if g:templateX_facts == 'live'
-			call <SID>TNotice('templateX including live facts')
+			call <SID>TInfo('templateX including live facts')
 			for line in split(system('facter'), "\x0a")
 				call <SID>TFact2templateXvar(line)
 			endfor
 		elseif filereadable(g:templateX_facts)
-			call <SID>TNotice('templateX including facts: ' . g:templateX_facts)
+			call <SID>TInfo('templateX including facts: ' . g:templateX_facts)
 			for line in readfile(g:templateX_facts)
 				call <SID>TFact2templateXvar(line)
 			endfor
@@ -80,6 +81,13 @@ function <SID>TLoadIncludesAndReturnTemplate(templates,path)
 	let path = fnamemodify(path,':p') " absolute
 	let folder = fnamemodify(path,':h:t')
 	let basename = fnamemodify(path,':t')
+	if match(basename,'%') > -1
+		let path = substitute('%' . basename, '%', '/','g')
+	  let path = fnamemodify(path,':p') " absolute
+	  let folder = fnamemodify(path,':h:t')
+	  let basename = fnamemodify(path,':t')
+		call <SID>TInfo('templateX found % - using filename: ' . path)
+  endif
 	let file_without_extension = fnamemodify(basename,':r')
 	let extension = fnamemodify(basename,':e')
 	let foundDir = ''
@@ -105,14 +113,32 @@ function <SID>TLoadIncludesAndReturnTemplate(templates,path)
 	endfor
 
 	" search for exact filename, *.extension or *
+	" and for the variants
 	" if required: go back until successful
 	let templatePath = templates . foundDir
 	let template = ''
 	let searchtemplate = 1
 	while 1
 		if searchtemplate
-			for i in [basename,'*.' . extension,'*']
+			for i in [basename, '*.' . extension, '*']
 				let file = templatePath . '/' . i
+
+				" show inputlist if variants of templates exist (files with ',...')
+	      let options = []
+				let x = 0
+				for option in split(glob(substitute(file,'*','\\*','g').',*'),'\n')
+					let x += 1
+				  let option = substitute(option,'.*,',x.' ','g')
+				  call add(options,option)
+				endfor
+				if len(options)
+					call insert(options,'Select template variant:')
+				  let option = inputlist(options)
+				  if option > 0 && option < len(options)
+				    let file .= ',' . substitute(options[option],'[0-9]* ','','')
+				  endif
+				endif
+
 				call <SID>TInfo('templateX searching for: ' . file)
 				if filereadable(file)
 					let template = file
@@ -128,7 +154,7 @@ function <SID>TLoadIncludesAndReturnTemplate(templates,path)
 				let file = templatePath . '/' . i . '.templateX.vim'
 				call <SID>TInfo('templateX searching for: ' . file)
 				if filereadable(file)
-					call <SID>TNotice('templateX including: ' . file)
+					call <SID>TInfo('templateX including: ' . file)
 					let file = substitute(file,'*','\\*','g')
 					execute 'source ' . file
 				endif
@@ -147,7 +173,6 @@ endfunction
 " Performs variable expansion in a template once it was loaded
 function <SID>TExpandVars()
 	for key in sort(keys(b:templateX))
-		"call <SID>TDebug('templateX b:templateX.' . key . '=' . b:templateX[key])
 		let pre  = exists("g:templateX_pre")  ? g:templateX_pre  : '__'
 		let post = exists("g:templateX_post") ? g:templateX_post : '__'
 		silent! execute '%s/' . pre . key . post . '/' . b:templateX[key] . '/gI'
@@ -158,11 +183,7 @@ endfunction
 
 " all message functions
 function <SID>TMessage(severity, message)
-	call insert(b:templateXlog,'[' . a:severity . '] ' . a:message)
-endfunction
-
-function <SID>TDebug(message)
-	call <SID>TMessage('debug',a:message)
+	call add(b:templateXlog,'[' . a:severity . '] ' . a:message)
 endfunction
 
 function <SID>TInfo(message)
@@ -182,7 +203,7 @@ endfunction
 " Show collected log messages
 function <SID>TShowLog()
 	if exists("b:templateX")
-		for logLine in reverse(b:templateXlog)
+		for logLine in b:templateXlog
 			echo logLine
 		endfor
 	else
@@ -198,7 +219,15 @@ function <SID>TShowVars()
 			echo 'templateX b:templateX.' . key . '=' . b:templateX[key]
 		endfor
 	else
-		echo 'templateX was not used in this buffer'
+		echo 'All variables begin with "b:templateX."'
+		echo 'Default variables:'
+		echo '  basename dirname extension file_without_extension path'
+		echo 'Additional variables may be (delivered with templates folder):'
+		echo '  day domainname hostname month time user year'
+		echo 'Other variables base on your configuration.'
+		echo 'templateX was not used in this buffer -'
+		echo 'to see which variables are available for a specific file: vi file.ext'
+		echo 'and use :TemplateXvars again.'
 	endif
 endfunction
 

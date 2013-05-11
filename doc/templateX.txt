@@ -18,6 +18,10 @@ Operation:
 
     * Traverses templates folder during search for a template
     * Uses templates with exact filename, *.extension or *
+      * for each: searches for template variants (,variantname appended)
+    * A % in the filename implies directory as destination e.g.:
+      /anywhere/etc%bash_completion.d%mytool is treated as if you edit
+      /etc/bash_completion.d/mytool
     * Standard variables from the plugin are available
     * Extensibe with custom include files (.vim) and templates
     * facts from facter (live or from file) can be available as variables
@@ -26,10 +30,10 @@ Operation:
 
 Functions:
 
-    * :TemplateXlog
-    * :TemplateXvars
+    * :TemplateXlog  " show the log of templateX
+    * :TemplateXvars " show available template variables
 
-Variables:
+Configuration variables:
 
     * g:templateX_plugin_loaded
     * g:templateX_no_autocmd

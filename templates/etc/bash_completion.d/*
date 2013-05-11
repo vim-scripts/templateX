@@ -1,0 +1,106 @@
+# bash completion for __basename__
+
+have __basename__ &&
+___basename__()
+{
+  _dropoption()
+  {
+    local j k
+    for ((j=0; j < ${#options[*]}; j++)); do
+      for k in "$@"; do
+        if [ "$k" = "${options[$j]}" -o "$k" = "*" ]; then
+          options[$j]=""
+        fi
+      done
+    done
+  }
+
+  local cur prev words cword i commaseparated=false
+  options=(-h --help -v --version -b --boolean -i --integer -u --user -g --group -p --package -f --file -s -d --directory --server -l --locale)
+
+  COMPREPLY=()
+  _get_comp_words_by_ref -n := cur prev words cword
+  _split_longopt
+
+  # disable used options -
+  # remove if you want to be able to use an option multiple times
+  for ((i=1; i < $cword; i++)); do
+    case ${words[$i]} in
+      -h|--help|-v|--version)
+        _dropoption '*'
+        break
+        ;;
+      -b|--boolean) _dropoption -b --boolean;;
+      -i|--integer) _dropoption -i --integer;;
+      -u|--user) _dropoption -u --user;;
+      -g|--group) _dropoption -g --group;;
+      -p|--package) _dropoption -p --package;;
+      -f|--file) _dropoption -f --file;;
+      -d|--directory) _dropoption -d --directory;;
+      -s|--server) _dropoption -s --server;;
+      -S|--size) _dropoption -S --size;;
+      -l|--locale) _dropoption -l --locale;;
+      -*) _dropoption ${words[$i]};;
+    esac
+  done
+
+  if [[ $cur == -* ]]; then
+    COMPREPLY=( $( compgen -W "${options[*]}" -- "$cur" ) )
+    return 0
+  else
+    case $prev in
+      -i|--integer)
+        COMPREPLY=(`compgen -P "$cur" -W '{0..9}'`)
+        ;;
+      -u|--user)
+        if [[ "$cur" == ?*,* ]]; then
+          # comma-separated list
+          prev="${cur%,*}"
+          cur="${cur##*,}"
+          COMPREPLY=(`compgen -u -P "$prev," -- "$cur"`)
+        else
+          # normal
+          COMPREPLY=(`compgen -u -- "$cur"`)
+        fi
+        return 0 # prev/cur modified
+        ;;
+      -g|--group)
+        COMPREPLY=(`compgen -g -- "$cur"`)
+        ;;
+      -p|--package)
+        COMPREPLY=(`apt-cache pkgnames -- "$cur"`)
+        ;;
+      -f|--file)
+        _filedir
+        #_filedir '@(*xx|mp[23]|ogg|txt?(.gz))'
+        ;;
+      -d|--directory)
+        _filedir -d
+        ;;
+      -s|--server)
+        if [[ "$cur" == ?*,* ]]; then
+          # remember list prefix e.g. -s hosta,host<tab> -> prev=hosta
+          prev="${cur%,*}"
+          cur="${cur##*,}"
+          commaseparated=true
+        fi
+        _known_hosts_real -a "$cur" # sets COMPREPLY
+        $commaseparated && COMPREPLY=(${COMPREPLY[@]/#/"$prev,"}) # prepend list prefix
+        return 0 # prev/cur modified
+        ;;
+      -S|--size)
+        case "$cur" in
+          "") COMPREPLY=(`compgen -W '{1..9}'`);;
+          [0-9]*[BKMGT]) COMPREPLY=("$cur");;
+          [0-9]*) COMPREPLY=(`compgen -P "$cur" -W '{0..9} B K M G T'`);;
+        esac
+      -l|--locale)
+        COMPREPLY=(`locale -a -- "$cur"`)
+        ;;
+    esac
+  fi
+  return 0
+} &&
+complete -F ___basename__ __basename__
+
+# vim:ft=sh:

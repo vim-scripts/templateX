@@ -2,7 +2,7 @@
  A Vim template plugin: templateX
 =================================
 :Author: Michael Arlt
-:Version: 1.01
+:Version: 1.1
 
 Distributed under the ``GNU General Public License (GPL) 3.0`` or higher
 - see file ``COPYING`` and http://www.gnu.org/licenses/gpl.html
@@ -17,6 +17,25 @@ extend the functionality of templateX.
 
 Changelog
 =========
+
+1.1:  - New feature: Treat ``vi etc%test`` as vi /etc/test
+      - New feature: User can select template variants
+      - Reduced standard output to one line (no return needed)
+      - Puppet templates (Designed für Puppet 2.7 (Ubuntu 12.04))
+        - Design adjusted to `Modern Module Development from Ken Barber`__
+        - Variant example for manifests/init.pp
+        - Moved modules templates in order to match puppet default location
+        - Subclasses can be in subfolders
+      - Variant examples for Shellscripts (``*.sh``)
+        - longopts (uses getopt)
+        - shortopts (uses getopts)
+        - simple (shebang only)
+        - yad-frontend (frontend for scripts using yad - yet another dialog)
+      - Completion template
+      - Bugfixes in README.rst
+      - Some smaller code improvements
+
+__ https://www.google.de/#q=puppet+modern+module+development
 
 1.01: - Fixed case sensitivity (s/.../.../gI) for tag replacement
       - Added message if factsfile missing/access
@@ -34,7 +53,7 @@ The easiest way to install the plugin is to install it as a bundle:
 
 2. ``cd ~/.vim/bundle`` # if you use pathogen
 
-3. Unpack templateX plugin
+3. Unpack templateX plugin to the bundle directory
 
 4. Optional: Copy the template directory to another location.
    Useful if you want to maintain the templates system wide or
@@ -42,7 +61,7 @@ The easiest way to install the plugin is to install it as a bundle:
    Adjust ``g:templateX_templates`` to the new templates directory::
 
    let g:templateX_templates = '/usr/local/vim-templates' " in ~/.vimrc
-
+   or in /etc/vim/vimrc.local
 
 __ https://github.com/tpope/vim-pathogen
 
@@ -84,8 +103,9 @@ Usage
 Create a new file giving it a name. The suffix will be used to determine
 which template to use - e.g.::
 
-    $ vim foo.sh
+    $ vim foo.sh # templateX gets used
     :w " to save; be aware that :x only saves if you modified the buffer
+    :e bar.sh " templateX gets used
 
 
 Template search order
@@ -97,14 +117,18 @@ The algorithm to search for templates works like this:
    into the folder structure if it matches the path of your filename.
    e.g. ``vi`` ``/etc/vim/vimrc.local`` -> searches in ``templates/etc/vim``
 
-2. Searches for a template which matches the filename
+2. Searches for a template which matches the filename or
+   ``filename,variant`` (see ``Template variants``)
    e.g. ``templates/etc/vim/vimrc.local``
 
 3. If not found: Searches for a template with same extension
-   e.g. ``templates/etc/vim/\*.local``
+   ``'*.extension,variant'`` (see ``Template variants``)
+   e.g. ``'templates/etc/vim/*.local'``
+   Hint: if no extension is used: ``'*..'``
 
 3. If not found: Searches for a template with filename '*'
-   e.g. ``templates/etc/vim/\*``
+   ``'*[,variant]'`` (see ``Template variants``)
+   e.g. ``'templates/etc/vim/*'`` or ``'templates/etc/vim/*,simple'``
 
 4. If not found: Walks back in directory structure
    e.g. ``templates/etc``
@@ -114,7 +138,25 @@ The algorithm to search for templates works like this:
 Stops if it reaches the template entry directory and no template was found.
 
 If a template was found it gets loaded and the search for
-``.vim`` files starts - see next chapter.
+``.vim`` files starts - see chapter ``Variables in templates``.
+
+
+Template variants
+-----------------
+
+A user can select between template variants if they exist.
+
+Let's assume your template is named ``'*.sh'`` and you want to provide two
+variants (``big`` and ``small``).
+
+Save your templates as ``'*.sh,big'`` and ``'*.sh,small'`` (comma delimiter).
+
+The user gets the following request:
+
+    Select template variant:
+    1 big
+    2 small
+    Type number and <Enter> or click with mouse (empty cancels):
 
 
 Variables in templates
@@ -131,10 +173,11 @@ Starting from the directory where the template was found:
    e.g. ``vimrc.local.templateX.vim``
 
 3. If not found: Searches for a template with same extension
-   e.g. ``\*.templateX.vim``
+   e.g. ``'*.local.templateX.vim'``
+   Hint: if no extension is used: ``'*..templateX.vim'``
 
 4. If not found: Searches for a template with filename ``*``
-   e.g. ``\*.vim``
+   e.g. ``'*.templateX.vim'``
 
 5. Walks back one level in the directory structure until the template
    entry folder is reached.
@@ -197,7 +240,7 @@ Output::
     templateX b:templateX.user=michael
     templateX b:templateX.year=2013
 
-Example usage in include files (``*.templateX.vim``)::
+Example usage in include files (``'*.templateX.vim'``)::
 
     let b:templateX.yearmonth = b:templateX.year . '/' . b:templateX.month
 
