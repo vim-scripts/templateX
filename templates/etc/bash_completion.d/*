@@ -16,7 +16,7 @@ ___basename__()
   }
 
   local cur prev words cword i commaseparated=false
-  options=(-h --help -v --version -b --boolean -i --integer -u --user -g --group -p --package -f --file -s -d --directory --server -l --locale)
+  options=(-h --help -v --version -b --boolean -i --integer -u --user -g --group -p --package -f --file -d --directory -s --server -S --size -l --locale)
 
   COMPREPLY=()
   _get_comp_words_by_ref -n := cur prev words cword

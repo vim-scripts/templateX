@@ -18,6 +18,8 @@ extend the functionality of templateX.
 Changelog
 =========
 
+1.11: - YAD templates extended
+      - Bugfixes/small improvements in templates (completion, bash*getopt*, yad)
 1.1:  - New feature: Treat ``vi etc%test`` as vi /etc/test
       - New feature: User can select template variants
       - Reduced standard output to one line (no return needed)

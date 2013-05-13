@@ -9,6 +9,7 @@ package=
 file=
 directory=
 server=
+size=
 locale=
 ### end-configuration-part ###
 
@@ -16,28 +17,29 @@ author='__user__'
 version='0.01'
 
 help() {
-  echo "Usage: ${0##*/} [-h|v] [-b] [-i val] [-u user] [-g group] [-p package] [-f file] [-d dir] [-s server] [-l locale] [other ...]
+  echo "Usage: ${0##*/} [-h|v] [-b] [-i val] [-u user] [-g group] [-p package] [-f file] [-d dir] [-s server] [-S size] [-l locale] [other ...]
 
     Description ...
 
     Options:
 
-    -b|--boolean         Parameter description
-    -i|--integer val     Parameter description
-    -u|--user user       Parameter description
-    -g|--group group     Parameter description
-    -p|--package pkg     Parameter description
-    -f|--file file       Parameter description
-    -d|--directory dir   Parameter description
-    -s|--server server   Parameter description
-    -l|--locale locale   Parameter description
-    -h                   Help
-    -v                   Show program version"
+    -b          Parameter description
+    -i val      Parameter description
+    -u user     Parameter description
+    -g group    Parameter description
+    -p pkg      Parameter description
+    -f file     Parameter description
+    -d dir      Parameter description
+    -s server   Parameter description
+    -S size     Parameter description
+    -l locale   Parameter description
+    -h          Help
+    -v          Show program version"
   test $# -gt 0 && echo "$*" >&2
   exit $#
 }
 
-while getopts ':bi:u:g:p:f:d:s:l:hv' option
+while getopts ':bi:u:g:p:f:d:s:S:l:hv' option
 do
   case $option in
     b) boolean=true;;
@@ -47,6 +49,7 @@ do
     f) file="$OPTARG";;
     d) directory="$OPTARG";;
     s) server="$OPTARG";;
+    S) size="$OPTARG";;
     l) locale="$OPTARG";;
     h) help;;
     v) echo -e "${0##*/} $version\nAuthor $author"; exit;;
@@ -66,6 +69,7 @@ echo package:$package
 echo file:$file
 echo directory:$directory
 echo server:$server
+echo size:$ize
 echo locale:$locale
 echo other parameters: "${other[@]:-}"
 

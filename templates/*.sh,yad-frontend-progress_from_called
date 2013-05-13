@@ -13,7 +13,6 @@
 ### start-configuration-part ###__goto__
 
 # /etc/hosts only: comboserver=`awk '/^[^#]/ {printf $2"!"}' /etc/hosts|sort`
-comboserver=`awk '/^[^#]/ {printf $2"!"}' /etc/hosts|sort`
 #comboserver=`grep -hve ^# -e ^"[0-9]" /etc/ssh/ssh_known_hosts* | cut -f1 -d" " | tr ',' '\012'| grep -v ^"[0-9]" | cut -f1 -d'.'| sort -u | grep -v ^$ | tr '\012' '!'`
 comboserver=`awk '/^[^#]/ {printf $2"!"}' /etc/hosts|sort`
 # all: user=`getent passwd|cut -f1 -d:|sort|tr '\012' '!'`
@@ -35,10 +34,12 @@ job_log=false # do you want to show log information in yad during progress?
 
 ### end-configuration-part ###
 
-# yad-start
-# icons - /usr/share/notify-osd/icons/ /usr/share/notify-osd/icons/
+author='__user__'
+version='0.01'
+
+# yad-start; icons: /usr/share/notify-osd/icons /usr/share/icons/... (48x48?!)
 while vars=`yad --width=400 --borders=5 \
-  --title="Window title" --form \
+  --title="Window title v$version ($author)" --form \
   --field="<b>Combo examples</b>":LBL '' \
   --field="Server":CBE "$comboserver" \
   --field="User":CBE "$combouser" \
@@ -81,29 +82,14 @@ _EOF
   $job_log && yad_mode+=' --enable-log '
   $job_progress_known || yad_mode+='--pulsate --progress-text running'
 
-  # progress bar
-  declare -i progress=0 max=100
-  while sleep 1; do
-    progress+=1
-    $job_progress_known && echo $[$progress*100/max] || echo
-    if $job_log; then
-      (date; echo hello from job) | sed s/^/#/
-    elif ! $job_progress_known; then
-      echo '#state'
-    fi
-  done | yad --title='Closing does not abort the process' --width=400 --progress $yad_mode &
-  progresspid=$!
+  # start of your job with progress
+  replacesleepandthiscommandwithyourjob 2>&1 | yad --title='Closing does not abort the process' --width=400 --progress --auto-close $yad_mode
 
-  # start of your job
-  if output=`sleep 10; replacesleepandthiscommandwithyourjob 2>&1`; then
-    disown $progresspid
-    kill $progresspid &>/dev/null
-    yad --error --text="$output"
+  if ${PIPESTATUS[0]} -eq 0; then
+    yad --image=dialog-ok --text='Successfull'
     break
   else
-    disown $progresspid
-    kill $progresspid &>/dev/null
-    yad --error --text="$output"
+    yad --image=dialog-error --text="Error (returncode ${PIPESTATUS[0]})"
     # adjust combos that the selected value is on top during next start of yad
     echo "$comboserver" | grep -q ^"$server!" || comboserver="$server!$comboserver"
     echo "$combouser"   | grep -q ^"$user!"   || combouser="$user!$combouser"

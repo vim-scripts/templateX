@@ -16,7 +16,7 @@ author='__user__'
 version='0.01'
 
 help() {
-  echo "Usage: ${0##*/} [-h|v] [-b] [-i val] [-u user] [-g group] [-p package] [-f file] [-d dir] [-s server] [-l locale] [other ...]
+  echo "Usage: ${0##*/} [-h|v] [-b|--boolean] [-i|--integer val] [-u|--user user] [-g|--group group] [-p|--package package] [-f|--file file] [-d|--directory dir] [-s|--server server] [-S|--size size] [-l|--locale locale] [other ...]
 
     Description ...
 
@@ -30,6 +30,7 @@ help() {
     -f|--file file       Parameter description
     -d|--directory dir   Parameter description
     -s|--server server   Parameter description
+    -S|--size val        Parameter description
     -l|--locale locale   Parameter description
     -h                   Help
     -v                   Show program version"
@@ -38,9 +39,9 @@ help() {
 }
 
 TEMP=`getopt -n "$0" \
-     -o bi:u:g:p:f:d:s:l:hv \
+     -o bi:u:g:p:f:d:s:S:l:hv \
      --long \
-     help,version,boolean:,integer:,user:,group:,package:,file:,directory:,server:,locale: \
+     help,version,boolean,integer:,user:,group:,package:,file:,directory:,server:,locale: \
      -- "$@"` || { echo "Terminating..." >&2; exit 1; }
 eval set -- "$TEMP"
 
@@ -55,6 +56,7 @@ do
     -f|--file) file="$2"; shift 2;;
     -d|--directory) directory="$2"; shift 2;;
     -s|--server) server="$2"; shift 2;;
+    -S|--size) size="$2"; shift 2;;
     -l|--locale) locale="$2"; shift 2;;
     -h|--help) help;;
     -v|--version) echo -e "${0##*/} $version\nAuthor $author"; exit;;
@@ -74,6 +76,7 @@ echo package:$package
 echo file:$file
 echo directory:$directory
 echo server:$server
+echo size:$size
 echo locale:$locale
 echo other parameters: "${other[@]:-}"
 
