@@ -132,6 +132,7 @@ function <SID>TLoadIncludesAndReturnTemplate(templates,path)
 				  call add(options,option)
 				endfor
 				if len(options)
+		      call <SID>TInfo('templateX found variants: ' . file)
 					call insert(options,'Select template variant:')
 				  let option = inputlist(options)
 				  if option > 0 && option < len(options)
@@ -139,12 +140,14 @@ function <SID>TLoadIncludesAndReturnTemplate(templates,path)
 				  endif
 				endif
 
-				call <SID>TInfo('templateX searching for: ' . file)
 				if filereadable(file)
+				  call <SID>TInfo('templateX loading: ' . file)
 					let template = file
 					let searchtemplate = 0
 					call <SID>TLoadFacts()
 					break
+				else
+				  call <SID>TInfo('templateX searching for: ' . file)
 				endif
 			endfor
 		endif
@@ -172,6 +175,7 @@ endfunction
 
 " Performs variable expansion in a template once it was loaded
 function <SID>TExpandVars()
+	call <SID>TInfo('templateX substituting variables')
 	for key in sort(keys(b:templateX))
 		let pre  = exists("g:templateX_pre")  ? g:templateX_pre  : '__'
 		let post = exists("g:templateX_post") ? g:templateX_post : '__'

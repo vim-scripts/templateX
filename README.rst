@@ -2,7 +2,7 @@
  A Vim template plugin: templateX
 =================================
 :Author: Michael Arlt
-:Version: 1.1
+:Version: 1.12
 
 Distributed under the ``GNU General Public License (GPL) 3.0`` or higher
 - see file ``COPYING`` and http://www.gnu.org/licenses/gpl.html
@@ -18,6 +18,9 @@ extend the functionality of templateX.
 Changelog
 =========
 
+1.12: - Small improvements (no bugfixes)
+        - Logging for :TemplateXlog
+        - doc/templateX.txt
 1.11: - YAD templates extended
       - Bugfixes/small improvements in templates (completion, bash*getopt*, yad)
 1.1:  - New feature: Treat ``vi etc%test`` as vi /etc/test
@@ -81,8 +84,7 @@ In your ``.vimrc`` you can put:
 * ``let g:templateX_post = '}'`` (def.: __) e.g. ${user} in this example
 
 Examine and customize the ``templates`` folder.
-Be aware that the templates are only examples and not fully tested -
-especially all templates in the deeper directories (e.g. puppet/icinga).
+Be aware that the templates are only examples and not fully tested.
 
 
 Updating

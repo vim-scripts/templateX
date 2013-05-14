@@ -35,12 +35,13 @@ Functions:
 
 Configuration variables:
 
-    * g:templateX_plugin_loaded
-    * g:templateX_no_autocmd
-    * g:templateX_templates
-    * g:templateX_facts
-    * g:templateX_pre
-    * g:templateX_post
+    * g:templateX_plugin_loaded = 1 # any value: skip loading this plugin
+    * g:templateX_no_autocmd = 1 # disable templates for new files
+    * g:templateX_templates = path # overwrite the default template path
+    * g:templateX_facts = 'live' | path # set fact source
+    * g:templateX_pre = '${' # (def.: __) define markup of template vars
+    * g:templateX_post = '}' # (def.: __) e.g. ${user} in this example
+
 
 
 ==============================================================================
