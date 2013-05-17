@@ -34,15 +34,15 @@ endif
 function <SID>TMain()
 	let template = <SID>TLoadIncludesAndReturnTemplate(s:templates,'%')
 	if template == ''
-		call <SID>TNotice('templateX no template found')
+		call <SID>TNotice('no template found')
 	elseif filereadable(template)
 		execute "0r " . substitute(template,'*','\\*','g')
 		call <SID>TExpandVars()
 		redraw
-		call <SID>TNotice('templateX used: ' . template)
+		call <SID>TNotice('used: ' . template)
 		setlocal nomodified
 	else
-		call <SID>TError('templateX missing rights: ' . template)
+		call <SID>TError('missing rights: ' . template)
 	endif
 endfunction
 
@@ -57,17 +57,17 @@ endfunction
 function <SID>TLoadFacts()
 	if exists("g:templateX_facts")
 		if g:templateX_facts == 'live'
-			call <SID>TInfo('templateX including live facts')
+			call <SID>TInfo('including live facts')
 			for line in split(system('facter'), "\x0a")
 				call <SID>TFact2templateXvar(line)
 			endfor
 		elseif filereadable(g:templateX_facts)
-			call <SID>TInfo('templateX including facts: ' . g:templateX_facts)
+			call <SID>TInfo('including facts: ' . g:templateX_facts)
 			for line in readfile(g:templateX_facts)
 				call <SID>TFact2templateXvar(line)
 			endfor
 		else
-		  call <SID>TError('templateX missing/access: ' . g:templateX_facts)
+		  call <SID>TError('missing/access: ' . g:templateX_facts)
 		endif
 	endif
 endfunction
@@ -86,7 +86,7 @@ function <SID>TLoadIncludesAndReturnTemplate(templates,path)
 	  let path = fnamemodify(path,':p') " absolute
 	  let folder = fnamemodify(path,':h:t')
 	  let basename = fnamemodify(path,':t')
-		call <SID>TInfo('templateX found % - using filename: ' . path)
+		call <SID>TInfo('path contains % - assuming: ' . path)
   endif
 	let file_without_extension = fnamemodify(basename,':r')
 	let extension = fnamemodify(basename,':e')
@@ -109,7 +109,7 @@ function <SID>TLoadIncludesAndReturnTemplate(templates,path)
 				break
 			endif
 		endif
-		call <SID>TInfo('templateX going deeper: ' . templates . foundDir)
+		call <SID>TInfo('deeper: ' . templates . foundDir)
 	endfor
 
 	" search for exact filename, *.extension or *
@@ -132,22 +132,26 @@ function <SID>TLoadIncludesAndReturnTemplate(templates,path)
 				  call add(options,option)
 				endfor
 				if len(options)
-		      call <SID>TInfo('templateX found variants: ' . file)
+		      call <SID>TInfo('variants: ' . file)
 					call insert(options,'Select template variant:')
 				  let option = inputlist(options)
 				  if option > 0 && option < len(options)
 				    let file .= ',' . substitute(options[option],'[0-9]* ','','')
+		        call <SID>TInfo('option: ' . options[option])
+					else
+		        call <SID>TInfo('option: none')
+		        break
 				  endif
 				endif
 
 				if filereadable(file)
-				  call <SID>TInfo('templateX loading: ' . file)
+				  call <SID>TInfo('loading: ' . file)
 					let template = file
 					let searchtemplate = 0
 					call <SID>TLoadFacts()
 					break
 				else
-				  call <SID>TInfo('templateX searching for: ' . file)
+				  call <SID>TInfo('searching: ' . file)
 				endif
 			endfor
 		endif
@@ -155,9 +159,9 @@ function <SID>TLoadIncludesAndReturnTemplate(templates,path)
 		if !searchtemplate " -> template was found: search includes
 			for i in [basename,'*.' . extension,'*']
 				let file = templatePath . '/' . i . '.templateX.vim'
-				call <SID>TInfo('templateX searching for: ' . file)
+				call <SID>TInfo('searching: ' . file)
 				if filereadable(file)
-					call <SID>TInfo('templateX including: ' . file)
+					call <SID>TInfo('including: ' . file)
 					let file = substitute(file,'*','\\*','g')
 					execute 'source ' . file
 				endif
@@ -175,7 +179,7 @@ endfunction
 
 " Performs variable expansion in a template once it was loaded
 function <SID>TExpandVars()
-	call <SID>TInfo('templateX substituting variables')
+	call <SID>TInfo('substituting variables')
 	for key in sort(keys(b:templateX))
 		let pre  = exists("g:templateX_pre")  ? g:templateX_pre  : '__'
 		let post = exists("g:templateX_post") ? g:templateX_post : '__'
@@ -196,12 +200,12 @@ endfunction
 
 function <SID>TNotice(message)
 	call <SID>TMessage('notice',a:message)
-	echom a:message
+	echom 'templateX ' . a:message
 endfunction
 
 function <SID>TError(message)
 	call <SID>TMessage('error',a:message)
-	echoe a:message
+	echoe 'templateX ' . a:message
 endfunction
 
 " Show collected log messages

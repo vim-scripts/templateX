@@ -2,7 +2,7 @@
  A Vim template plugin: templateX
 =================================
 :Author: Michael Arlt
-:Version: 1.12
+:Version: 1.13
 
 Distributed under the ``GNU General Public License (GPL) 3.0`` or higher
 - see file ``COPYING`` and http://www.gnu.org/licenses/gpl.html
@@ -18,6 +18,8 @@ extend the functionality of templateX.
 Changelog
 =========
 
+1.13: - Improved & shortened logging
+      - Abort if user selects no template variant
 1.12: - Small improvements (no bugfixes)
         - Logging for :TemplateXlog
         - doc/templateX.txt
