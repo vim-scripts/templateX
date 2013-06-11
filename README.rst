@@ -2,7 +2,7 @@
  A Vim template plugin: templateX
 =================================
 :Author: Michael Arlt
-:Version: 1.13
+:Version: 1.14
 
 Distributed under the ``GNU General Public License (GPL) 3.0`` or higher
 - see file ``COPYING`` and http://www.gnu.org/licenses/gpl.html
@@ -13,11 +13,16 @@ This is a plugin for Vim that will allow you to have a set of
 templates for certain file types. It is useful for automating
 some daily tasks with custom includes which enable you to
 extend the functionality of templateX.
+Be aware that the templates are not fully tested.
 
 
 Changelog
 =========
 
+1.14: - Small bugfixes/improvements in templates (especially YAD)
+      - Additional YAD template ``*.sh,yad-frontend-monitor_read``:
+      - Renamed some templates
+      - Cleanup of tabs/spaces in Vim- and Puppet-templates
 1.13: - Improved & shortened logging
       - Abort if user selects no template variant
 1.12: - Small improvements (no bugfixes)
@@ -31,7 +36,7 @@ Changelog
       - Puppet templates (Designed für Puppet 2.7 (Ubuntu 12.04))
         - Design adjusted to `Modern Module Development from Ken Barber`__
         - Variant example for manifests/init.pp
-        - Moved modules templates in order to match puppet default location
+        - Moved modules templates in order to match Puppet default location
         - Subclasses can be in subfolders
       - Variant examples for Shellscripts (``*.sh``)
         - longopts (uses getopt)

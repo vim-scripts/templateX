@@ -94,6 +94,7 @@ ___basename__()
           [0-9]*[BKMGT]) COMPREPLY=("$cur");;
           [0-9]*) COMPREPLY=(`compgen -P "$cur" -W '{0..9} B K M G T'`);;
         esac
+        ;;
       -l|--locale)
         COMPREPLY=(`locale -a -- "$cur"`)
         ;;

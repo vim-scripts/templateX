@@ -25,19 +25,16 @@ combounit='K!M!G!T'
 string=default
 integer=10
 boolean=true
-file=''
-dir=''
-date=''
-
-job_progress_known=true # can you calculate the progress (1-100%)?
-job_log=false # do you want to show log information in yad during progress?
+file=
+dir=
+date=
 
 ### end-configuration-part ###
 
 author='__user__'
 version='0.01'
 
-# yad-start; icons: /usr/share/notify-osd/icons /usr/share/icons/... (48x48?!)
+# yad-start; icons: /usr/share/notify-osd/icons /usr/share/icons/...
 while vars=`yad --width=400 --borders=5 \
   --title="Window title v$version ($author)" --form \
   --field="<b>Combo examples</b>":LBL '' \
@@ -78,18 +75,12 @@ _EOF
   echo dir:$dir
   echo date:$date
 
-  yad_mode=
-  $job_log && yad_mode+=' --enable-log '
-  $job_progress_known || yad_mode+='--pulsate --progress-text running'
-
-  # start of your job with progress
-  replacesleepandthiscommandwithyourjob 2>&1 | yad --title='Closing does not abort the process' --width=400 --progress --auto-close $yad_mode
-
-  if ${PIPESTATUS[0]} -eq 0; then
-    yad --image=dialog-ok --text='Successfull'
+  # start of your job
+  if output=`replacesleepandthiscommandwithyourjob 2>&1`; then
+    yad --image=dialog-ok --button=gtk-yes:0 --text="Successful\n$output"
     break
   else
-    yad --image=dialog-error --text="Error (returncode ${PIPESTATUS[0]})"
+    yad --image=dialog-error --button=gtk-yes:0 --text="Error ($?)\n$output"
     # adjust combos that the selected value is on top during next start of yad
     echo "$comboserver" | grep -q ^"$server!" || comboserver="$server!$comboserver"
     echo "$combouser"   | grep -q ^"$user!"   || combouser="$user!$combouser"

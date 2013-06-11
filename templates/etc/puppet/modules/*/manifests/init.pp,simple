@@ -22,7 +22,7 @@
 #
 #
 class __puppet_fqcn__ (
-  	$par1 = 'default',
+    $par1 = 'default',
   ) {
 
   File {

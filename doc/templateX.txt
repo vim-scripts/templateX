@@ -13,6 +13,7 @@
 1. Reference                                             *templateX-reference*
 
 All is explained in README.rst. This is only a summary/reference.
+Be aware that the templates are not fully tested.
 
 Operation:
 
@@ -24,7 +25,7 @@ Operation:
       /etc/bash_completion.d/mytool
     * Standard variables from the plugin are available
     * Extensibe with custom include files (.vim) and templates
-    * facts from facter (live or from file) can be available as variables
+    * Facts from facter (live or from file) can be available as variables
     * Functions as interface to logging and template variables
     * Templates and includes are maintainable outside of plugin directory
 

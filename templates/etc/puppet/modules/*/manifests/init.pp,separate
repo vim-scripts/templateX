@@ -22,8 +22,8 @@
 #
 #
 class __puppet_fqcn__ (
-  	$par1 = 'default',
-  	$packages = $__puppet_fqcn__::params,
+    $par1 = 'default',
+    $packages = $__puppet_fqcn__::params,
   ) inherits __puppet_fqcn__::params {
 
   File {
@@ -55,7 +55,7 @@ class __puppet_fqcn__ (
   #   }
   #
   define add (
-  	$par1 = 'default',
+    $par1 = 'default',
   ) {
 
     File {

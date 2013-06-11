@@ -25,19 +25,20 @@ combounit='K!M!G!T'
 string=default
 integer=10
 boolean=true
-file=''
-dir=''
-date=''
+file=
+dir=
+date=
 
 job_progress_known=true # can you calculate the progress (1-100%)?
-job_log=false # do you want to show log information in yad during progress?
+job_log=true # do you want to show log information in yad during progress?
+yad_mode='--title="Closing does not abort the process" --width=640 ' # progress window during job
 
 ### end-configuration-part ###
 
 author='__user__'
 version='0.01'
 
-# yad-start; icons: /usr/share/notify-osd/icons /usr/share/icons/... (48x48?!)
+# yad-start; icons: /usr/share/notify-osd/icons /usr/share/icons/...
 while vars=`yad --width=400 --borders=5 \
   --title="Window title v$version ($author)" --form \
   --field="<b>Combo examples</b>":LBL '' \
@@ -78,33 +79,25 @@ _EOF
   echo dir:$dir
   echo date:$date
 
-  yad_mode=
-  $job_log && yad_mode+=' --enable-log '
+  yad_mode+=' --progress'
+  $job_log && yad_mode+=' --enable-log --log-expanded --height=400' || yad_mode+=' --auto-close'
   $job_progress_known || yad_mode+='--pulsate --progress-text running'
 
-  # progress bar
-  declare -i progress=0 max=100
-  while sleep 1; do
-    progress+=1
-    $job_progress_known && echo $[$progress*100/max] || echo
-    if $job_log; then
-      (date; echo hello from job) | sed s/^/#/
-    elif ! $job_progress_known; then
-      echo '#state'
-    fi
-  done | yad --title='Closing does not abort the process' --width=400 --progress $yad_mode &
-  progresspid=$!
-
   # start of your job
-  if output=`sleep 10; replacesleepandthiscommandwithyourjob 2>&1`; then
-    disown $progresspid
-    kill $progresspid &>/dev/null
-    yad --image=dialog-ok --text="Successful\n$output"
+  replacethiscommandwithyourjob 2>&1 | while read line; do
+    case $line in
+      xxx*) $job_progress_known && echo 10;;
+      yyy*) $job_progress_known && echo 20;;
+    esac
+    $job_log && echo "#$line"
+  done | yad $yad_mode
+  pipestatus="${PIPESTATUS[*]}"
+
+  if echo $pipestatus | grep -qE ^'0 (0 )*[0-9]*'$; then
+    yad --image=dialog-ok --button=gtk-yes:0 --text='Successful'
     break
   else
-    disown $progresspid
-    kill $progresspid &>/dev/null
-    yad --image=dialog-error --text="Error:\n$output"
+    yad --image=dialog-error --button=gtk-yes:0 --text="Error (returncodes $pipestatus)"
     # adjust combos that the selected value is on top during next start of yad
     echo "$comboserver" | grep -q ^"$server!" || comboserver="$server!$comboserver"
     echo "$combouser"   | grep -q ^"$user!"   || combouser="$user!$combouser"
